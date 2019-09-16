@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- <link rel="icon" href="https://v3.bootcss.com/favicon.ico"/> -->
+
+    <title>转换</title>
+    <!-- Bootstrap core CSS -->
+    <link href="index_files/bootstrap.css" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="index_files/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="index_files/starter-template.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="index_files/ie-emulation-modes-warning.js"></script>
+
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=Lc2673Rt9LSrApsFDnmrlDU1AfsXMbrG"></script>
+    <script src="index_files/jquery.js"></script>
+  </head>
+
+  <body>
+
+    <script>
+        function trans() {
+            let n = 338024, part = 10
+            function deal(id) {
+                console.log(id)
+                if (id == n)
+                    return
+                
+                let r = id + part
+                if (r > n)
+                    r = n
+
+                console.log('r: ', r)
+                
+                $.post('/trans', {
+                    l: id,
+                    r: r
+                }, function(data) {
+                    console.log(data)
+                    let convertor = new BMap.Convertor()
+                    convertor.translate(data.points.map(v => new BMap.Point(v.x, v.y)), 3, 5, function(data) {
+                        if (data.status == 0) {
+                            let points = data.points
+                            res = []
+                            for (let i = id; i < r; i++) {
+                                console.log(i)
+                                res.push({
+                                    id: i,
+                                    x: points[i - id].lng,
+                                    y: points[i - id].lat
+                                })
+                            }
+
+                            $.post('/get-result', {
+                                status: 0,
+                                result: res
+                            }, function() {
+                                setTimeout(function() {
+                                    deal(r)
+                                }, 10) 
+                            })
+                        } else {
+                            console.log('error: ', id)
+                        }
+                    })
+                })
+            }
+            deal(216160)
+        }
+    </script>
+    <button onclick="trans()">开始</button>
+
+</body></html>

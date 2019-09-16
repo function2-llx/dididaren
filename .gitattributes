@@ -1,0 +1,5 @@
+data/car.txt filter=lfs diff=lfs merge=lfs -text
+data/GP_Tree.data filter=lfs diff=lfs merge=lfs -text
+data/road.cnode filter=lfs diff=lfs merge=lfs -text
+data/road.nedge filter=lfs diff=lfs merge=lfs -text
+data/bnode.txt filter=lfs diff=lfs merge=lfs -text

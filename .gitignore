@@ -1,0 +1,10 @@
+*.pdf
+.vscode
+build/
+bin/
+lib/
+node_modules/
+_minted-report/
+report.*
+assets/
+submit.zip
